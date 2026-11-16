@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CineScope — Plataforma cinematográfica Full-Stack para el descubrimiento de películas, tendencias, sinopsis, trailers y gestión de listas personales.">
+  <meta name="theme-color" content="#08090d">
+  <title>CineScope — Descubrimiento Cinematográfico</title>
+
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons (Local con fallback a CDN) -->
+  <link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Estilos Maestros Compilados con Sass y Bootstrap 5 -->
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+
+  <!-- ============================================== -->
+  <!-- BARRA DE NAVEGACIÓN CINEMATOGRÁFICA -->
+  <!-- ============================================== -->
+  <nav class="navbar navbar-expand-lg navbar-cinescope">
+    <div class="container-fluid px-3 px-lg-5">
+      <!-- Marca y Logo -->
+      <a class="navbar-brand" href="#home" data-nav-target="home">
+        <i class="bi bi-film brand-icon"></i>
+        <span>CINE<span class="brand-highlight">SCOPE</span></span>
+      </a>
+
+      <!-- Botón Hamburguesa Móvil -->
+      <button class="navbar-toggler border-0 text-light" type="button" data-bs-toggle="collapse" data-bs-target="#cinescopeNav" aria-controls="cinescopeNav" aria-expanded="false" aria-label="Navegación">
+        <i class="bi bi-list fs-2"></i>
+      </button>
+
+      <!-- Menú Colapsable -->
+      <div class="collapse navbar-collapse" id="cinescopeNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
+          <li class="nav-item">
+            <a class="nav-link active" href="#home" data-nav-target="home">
+              <i class="bi bi-house-door-fill me-1"></i> Inicio
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#explore" data-nav-target="explore">
+              <i class="bi bi-compass-fill me-1"></i> Explorar
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center" href="#favorites" data-nav-target="favorites">
+              <i class="bi bi-heart-fill me-1 text-danger"></i> Favoritos
+              <span class="badge bg-danger rounded-pill ms-2" id="favCountBadge">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center" href="#watchlist" data-nav-target="watchlist">
+              <i class="bi bi-bookmark-fill me-1 text-warning"></i> Mi Lista
+              <span class="badge bg-warning text-dark rounded-pill ms-2" id="watchCountBadge">0</span>
+            </a>
+          </li>
+        </ul>
+
+        <!-- Buscador en tiempo real -->
+        <div class="nav-search-container my-2 my-lg-0">
+          <i class="bi bi-search search-icon"></i>
+          <input 
+            type="text" 
+            id="navSearchInput" 
+            class="form-control search-input" 
+            placeholder="Buscar películas, actores..." 
+            autocomplete="off"
+            aria-label="Buscar películas"
+          />
+          <button id="clearSearchBtn" class="clear-search-btn" title="Limpiar búsqueda">
+            <i class="bi bi-x-circle-fill"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================== -->
+  <!-- ALERTA DE CONFIGURACIÓN TMDB (SI FALTA API KEY) -->
+  <!-- ============================================== -->
+  <div class="container-fluid px-3 px-lg-5 mt-3 d-none" id="tmdbConfigAlert">
+    <div class="alert alert-warning border-0 rounded-4 p-3 d-flex align-items-center justify-content-between" style="background: rgba(255, 183, 3, 0.15); border: 1px solid rgba(255, 183, 3, 0.3);">
+      <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-key-fill text-warning fs-3"></i>
+        <div>
+          <h6 class="alert-heading fw-bold mb-1 text-warning">Clave de API de TMDB requerida</h6>
+          <p class="mb-0 small text-light-subtle">
+            Para consultar el catálogo real de películas, configura tu clave en el archivo <code>.env</code> como <code>TMDB_API_KEY=tu_clave</code> o reinicia el servidor una vez agregada.
+          </p>
+        </div>
+      </div>
+      <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline-warning text-nowrap rounded-pill ms-3">
+        Obtener API Key Gratis <i class="bi bi-box-arrow-up-right ms-1"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- CONTENEDOR PRINCIPAL DE SECCIONES -->
+  <!-- ============================================== -->
+  <main class="container-fluid px-3 px-lg-5 pt-4">
+
+    <!-- SECCIÓN 1: INICIO -->
+    <section id="home-section" class="app-section active">
+      <!-- Banner Destacado Hero -->
+      <div id="heroContainer"></div>
+
+      <!-- Tendencias de Hoy -->
+      <div class="mb-5">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="accent-bar"></span>
+            <span>Tendencias de Hoy</span>
+          </h2>
+          <button class="btn btn-sm btn-cinema-secondary" onclick="app.navigateTo('explore')">
+            Ver Todo <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        </div>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 g-lg-4" id="trendingGrid"></div>
+      </div>
+
+      <!-- Películas Populares -->
+      <div class="mb-5">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="accent-bar"></span>
+            <span>Películas Populares</span>
+          </h2>
+        </div>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 g-lg-4" id="popularGrid"></div>
+      </div>
+
+      <!-- Próximos Estrenos -->
+      <div class="mb-5">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="accent-bar"></span>
+            <span>Próximos Estrenos en Cines</span>
+          </h2>
+        </div>
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 g-lg-4" id="upcomingGrid"></div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN 2: EXPLORAR -->
+    <section id="explore-section" class="app-section">
+      <div class="section-header flex-column flex-md-row align-items-start align-items-md-center gap-3">
+        <h2 class="section-title">
+          <span class="accent-bar"></span>
+          <span>Catálogo de Películas</span>
+        </h2>
+        <div class="d-flex align-items-center gap-2">
+          <label for="exploreSortSelect" class="small text-secondary text-nowrap">Ordenar por:</label>
+          <select id="exploreSortSelect" class="form-select form-select-sm bg-dark text-light border-secondary rounded-pill" style="max-width: 200px;">
+            <option value="popularity.desc" selected>Más Populares</option>
+            <option value="vote_average.desc">Mayor Calificación</option>
+            <option value="primary_release_date.desc">Más Recientes</option>
+            <option value="revenue.desc">Mayor Recaudación</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Barra de Filtros por Género -->
+      <div class="genre-filter-bar" id="genreFilterBar"></div>
+
+      <!-- Grilla del Catálogo -->
+      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 g-lg-4" id="exploreGrid"></div>
+
+      <!-- Paginación de Explorar -->
+      <div id="explorePagination"></div>
+    </section>
+
+    <!-- SECCIÓN 3: BÚSQUEDA -->
+    <section id="search-section" class="app-section">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title" id="searchQueryTitle">Resultados de Búsqueda</h2>
+          <p class="text-secondary small mb-0 mt-1" id="searchResultCount"></p>
+        </div>
+        <button class="btn btn-sm btn-cinema-secondary" onclick="app.navigateTo('home')">
+          <i class="bi bi-x-lg me-1"></i> Cerrar Búsqueda
+        </button>
+      </div>
+
+      <!-- Grilla de Resultados de Búsqueda -->
+      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 g-lg-4" id="searchGrid"></div>
+
+      <!-- Paginación de Búsqueda -->
+      <div id="searchPagination"></div>
+    </section>
+
+    <!-- SECCIÓN 4: FAVORITOS -->
+    <section id="favorites-section" class="app-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="accent-bar"></span>
+          <span>Películas Favoritas</span>
+        </h2>
+        <span class="badge-count" id="favSectionCount">0 guardadas</span>
+      </div>
+
+      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 g-lg-4" id="favoritesGrid"></div>
+    </section>
+
+    <!-- SECCIÓN 5: MI LISTA (WATCHLIST) -->
+    <section id="watchlist-section" class="app-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="accent-bar"></span>
+          <span>Mi Lista de Pendientes</span>
+        </h2>
+        <span class="badge-count" id="watchSectionCount">0 pendientes</span>
+      </div>
+
+      <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-3 g-lg-4" id="watchlistGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- ============================================== -->
+  <!-- MODAL DE DETALLES CINEMATOGRÁFICO -->
+  <!-- ============================================== -->
+  <div class="modal fade modal-cinematic" id="movieDetailsModal" tabindex="-1" aria-labelledby="movieDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content" id="modalContent">
+        <!-- Renderizado dinámico mediante DetailsModalView -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- CONTENEDOR FLOTANTE DE NOTIFICACIONES TOAST -->
+  <!-- ============================================== -->
+  <div id="toast-container" class="cinema-toast-container"></div>
+
+  <!-- ============================================== -->
+  <!-- PIE DE PÁGINA CINEMATOGRÁFICO Y ATRIBUCIÓN TMDB -->
+  <!-- ============================================== -->
+  <footer class="footer-cinescope">
+    <div class="container-fluid px-3 px-lg-5">
+      <div class="row align-items-center g-4">
+        <!-- Columna 1: Información del Proyecto -->
+        <div class="col-lg-6">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="bi bi-film text-danger fs-4"></i>
+            <span class="footer-brand">CINE<span class="text-danger">SCOPE</span></span>
+          </div>
+          <p class="fw-semibold text-light mb-1">CineScope — Descubre. Explora. Disfruta.</p>
+          <p class="text-secondary small mb-2" style="max-width: 500px;">
+            Una plataforma para descubrir películas, explorar tendencias cinematográficas y encontrar tu próxima película favorita.
+          </p>
+          <div class="d-flex gap-2">
+            <span class="badge bg-dark border border-secondary text-secondary">Node.js</span>
+            <span class="badge bg-dark border border-secondary text-secondary">Express</span>
+            <span class="badge bg-dark border border-secondary text-secondary">SQLite</span>
+            <span class="badge bg-dark border border-secondary text-secondary">Bootstrap 5</span>
+            <span class="badge bg-dark border border-secondary text-secondary">Sass</span>
+            <span class="badge bg-dark border border-secondary text-secondary">TMDB API</span>
+          </div>
+        </div>
+
+        <!-- Columna 2: Atribución Oficial TMDB -->
+        <div class="col-lg-6">
+          <div class="tmdb-attribution-badge">
+            <div class="tmdb-logo-wrapper">
+              <img 
+                src="/img/tmdb-logo.svg" 
+                alt="The Movie Database (TMDB)" 
+                class="tmdb-logo"
+                width="68"
+                height="49"
+              />
+            </div>
+            <p class="tmdb-attribution-text">
+              This product uses the TMDB API but is not endorsed or certified by TMDB.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <hr class="my-4 border-secondary opacity-25">
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-center small text-secondary">
+        <p class="mb-0">© 2026 CineScope. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts: Bootstrap Bundle JS -->
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Scripts: Capa de Vistas y Servicios MVC Frontend -->
+  <script src="/js/services/apiService.js"></script>
+  <script src="/js/views/toastView.js"></script>
+  <script src="/js/views/movieCardView.js"></script>
+  <script src="/js/views/heroBannerView.js"></script>
+  <script src="/js/views/detailsModalView.js"></script>
+  <script src="/js/app.js"></script>
+
+</body>
+</html>

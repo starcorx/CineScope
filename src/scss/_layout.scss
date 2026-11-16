@@ -1,0 +1,266 @@
+// ==========================================
+// CINESCOPE - LAYOUT Y ESTRUCTURA
+// ==========================================
+
+body {
+  background-color: $cinema-black;
+  color: $body-color;
+  font-family: $font-family-sans-serif;
+  overflow-x: hidden;
+  @include custom-scrollbar();
+}
+
+// Barra de Navegación Principal
+.navbar-cinescope {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  padding: 0.85rem 0;
+  transition: background-color $transition-speed ease, padding $transition-speed ease;
+  @include glassmorphism(0.85, 20px, $cinema-border);
+
+  &.scrolled {
+    padding: 0.6rem 0;
+    background: rgba($cinema-deep, 0.95);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  }
+
+  .navbar-brand {
+    font-family: $font-family-display;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #ffffff;
+
+    .brand-icon {
+      color: $cinema-red;
+      filter: drop-shadow(0 0 10px $cinema-red-glow);
+    }
+
+    .brand-highlight {
+      color: $cinema-red;
+    }
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    position: relative;
+    transition: color $transition-speed ease;
+
+    &:hover {
+      color: #ffffff;
+    }
+
+    &.active {
+      color: #ffffff;
+      font-weight: 600;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0px;
+        left: 1rem;
+        right: 1rem;
+        height: 2px;
+        background: linear-gradient(90deg, $cinema-red, $cinema-violet);
+        border-radius: 999px;
+        box-shadow: 0 0 8px $cinema-red;
+      }
+    }
+  }
+
+  // Barra de búsqueda en la Navbar
+  .nav-search-container {
+    position: relative;
+    max-width: 320px;
+    width: 100%;
+
+    .search-input {
+      background: rgba($cinema-surface-light, 0.8);
+      border: 1px solid $cinema-border;
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 0.45rem 1rem 0.45rem 2.4rem;
+      font-size: 0.9rem;
+      transition: all $transition-speed ease;
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.45);
+      }
+
+      &:focus {
+        background: rgba($cinema-surface, 0.95);
+        border-color: $cinema-red;
+        box-shadow: 0 0 0 3px rgba($cinema-red, 0.25);
+        outline: none;
+      }
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.5);
+      pointer-events: none;
+      font-size: 0.9rem;
+    }
+
+    .clear-search-btn {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: none;
+
+      &:hover {
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+// Contenedor de Secciones
+.app-section {
+  display: none;
+  animation: fadeIn 0.4s ease forwards;
+
+  &.active {
+    display: block;
+  }
+}
+
+// Encabezados de Sección
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid $cinema-border;
+
+  .section-title {
+    font-family: $font-family-display;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    .accent-bar {
+      width: 4px;
+      height: 1.4rem;
+      background: linear-gradient(180deg, $cinema-red 0%, $cinema-violet 100%);
+      border-radius: 999px;
+      box-shadow: 0 0 10px $cinema-red-glow;
+    }
+  }
+
+  .badge-count {
+    background: rgba($cinema-surface-light, 0.8);
+    border: 1px solid $cinema-border;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 500;
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+// Pie de Página Cinematográfico
+.footer-cinescope {
+  background: $cinema-deep;
+  border-top: 1px solid $cinema-border;
+  padding: 3rem 0 2rem;
+  margin-top: 5rem;
+
+  .footer-brand {
+    font-family: $font-family-display;
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: #ffffff;
+  }
+
+  .tmdb-attribution-badge {
+    background: rgba($cinema-surface, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: $border-radius;
+    padding: 1.1rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    transition: all $transition-speed ease;
+
+    @media (min-width: 576px) {
+      flex-direction: row;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    &:hover {
+      background: rgba($cinema-surface-light, 0.75);
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .tmdb-logo-wrapper {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .tmdb-logo {
+        width: 68px;
+        height: auto;
+        display: block;
+        transition: transform $transition-speed ease;
+      }
+    }
+
+    &:hover .tmdb-logo {
+      transform: scale(1.04);
+    }
+
+    .tmdb-attribution-text {
+      margin: 0;
+      font-size: 0.85rem;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.72);
+      font-weight: 400;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmerAnimation {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

@@ -1,0 +1,711 @@
+// ==========================================
+// CINESCOPE - COMPONENTES CINEMATOGRÁFICOS
+// ==========================================
+
+// 1. HERO BANNER Y CARRUSEL CINEMATOGRÁFICO
+.hero-carousel-container,
+.hero-banner {
+  position: relative;
+  min-height: 520px;
+  border-radius: $border-radius-xl;
+  overflow: hidden;
+  margin-bottom: 3rem;
+  background-color: $cinema-surface;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.75s ease-in-out, transform 0.75s ease-in-out;
+    transform: scale(1.02);
+    background-size: cover;
+    background-position: center top;
+    display: flex;
+    align-items: flex-end;
+    z-index: 1;
+
+    &.active {
+      position: relative;
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1);
+      z-index: 2;
+      min-height: 520px;
+    }
+  }
+
+  // Degradados de superposición para legibilidad
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      $cinema-black 0%,
+      rgba($cinema-black, 0.85) 30%,
+      rgba($cinema-black, 0.35) 70%,
+      transparent 100%
+    ),
+    linear-gradient(
+      to right,
+      $cinema-black 0%,
+      rgba($cinema-black, 0.8) 45%,
+      transparent 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 3;
+    padding: 3rem;
+    max-width: 780px;
+
+    .hero-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba($cinema-red, 0.2);
+      border: 1px solid rgba($cinema-red, 0.4);
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-family: $font-family-display;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 0.8rem;
+      color: #ffffff;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.8);
+
+      .rating-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: rgba($cinema-gold, 0.15);
+        color: $cinema-gold;
+        font-weight: 700;
+        padding: 0.2rem 0.6rem;
+        border-radius: 6px;
+        border: 1px solid rgba($cinema-gold, 0.3);
+      }
+    }
+
+    .hero-overview {
+      font-size: 0.98rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 1.5rem;
+      @include line-clamp(3);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+  }
+
+  // Controles de navegación del carrusel (Flechas prev/next)
+  .hero-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba($cinema-black, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: all $transition-speed ease;
+    opacity: 0;
+
+    &:hover {
+      background: $cinema-red;
+      border-color: $cinema-red;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    &.hero-nav-prev {
+      left: 1.2rem;
+    }
+
+    &.hero-nav-next {
+      right: 1.2rem;
+    }
+  }
+
+  &:hover .hero-nav-btn {
+    opacity: 1;
+  }
+
+  // Indicadores de diapositiva (Puntos / Barras)
+  .hero-indicators {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 2rem;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .hero-indicator-dot {
+      width: 28px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      cursor: pointer;
+      transition: all $transition-speed ease;
+      padding: 0;
+
+      &.active {
+        width: 44px;
+        background: $cinema-red;
+        box-shadow: 0 0 10px $cinema-red-glow;
+      }
+
+      &:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.6);
+      }
+    }
+  }
+}
+
+// 2. BOTONES CINEMATOGRÁFICOS
+.btn-cinema-primary {
+  background: linear-gradient(135deg, $cinema-red 0%, darken($cinema-red, 8%) 100%);
+  color: #ffffff;
+  border: none;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all $transition-speed ease;
+  box-shadow: 0 4px 14px $cinema-red-glow;
+
+  &:hover {
+    background: linear-gradient(135deg, lighten($cinema-red, 5%) 0%, $cinema-red 100%);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(229, 9, 20, 0.6);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-cinema-secondary {
+  background: rgba($cinema-surface-light, 0.8);
+  border: 1px solid $cinema-border-light;
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.6rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all $transition-speed ease;
+  backdrop-filter: blur(8px);
+
+  &:hover {
+    background: rgba($cinema-surface-hover, 1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+}
+
+.btn-cinema-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($cinema-surface, 0.8);
+  border: 1px solid $cinema-border;
+  color: #ffffff;
+  transition: all $transition-speed ease;
+  backdrop-filter: blur(8px);
+
+  &:hover {
+    background: $cinema-red;
+    border-color: $cinema-red;
+    color: #ffffff;
+    transform: scale(1.1);
+  }
+
+  &.active {
+    background: $cinema-red;
+    border-color: $cinema-red;
+    color: #ffffff;
+  }
+}
+
+// 3. TARJETA DE PELÍCULA (MOVIE CARD)
+.movie-card {
+  position: relative;
+  border-radius: $border-radius;
+  overflow: hidden;
+  background-color: $cinema-surface;
+  border: 1px solid $cinema-border;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  @include cinema-card-hover();
+
+  .poster-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 150%; // Relación de aspecto 2:3 estándar para pósteres
+    overflow: hidden;
+    background-color: $cinema-surface-light;
+
+    .poster-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s $transition-bounce;
+    }
+
+    .rating-badge {
+      position: absolute;
+      top: 0.6rem;
+      left: 0.6rem;
+      z-index: 3;
+      background: rgba($cinema-black, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: $cinema-gold;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      backdrop-filter: blur(8px);
+    }
+
+    // Botones de acción rápida sobre la tarjeta
+    .quick-actions {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: all $transition-speed ease;
+    }
+
+    .poster-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        $cinema-surface 0%,
+        rgba($cinema-surface, 0.4) 40%,
+        transparent 100%
+      );
+      opacity: 0.8;
+      transition: opacity $transition-speed ease;
+    }
+  }
+
+  &:hover {
+    .poster-wrapper .poster-img {
+      transform: scale(1.08);
+    }
+
+    .poster-wrapper .quick-actions {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .poster-wrapper .poster-overlay {
+      opacity: 0.4;
+    }
+  }
+
+  .movie-info {
+    padding: 0.9rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .movie-title {
+      font-family: $font-family-sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 0 0 0.3rem;
+      color: #ffffff;
+      @include line-clamp(1);
+    }
+
+    .movie-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.55);
+
+      .release-year {
+        font-weight: 500;
+      }
+
+      .btn-details-link {
+        color: $cinema-red;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.8rem;
+
+        &:hover {
+          color: lighten($cinema-red, 10%);
+        }
+      }
+    }
+  }
+}
+
+// 4. BARRA DE FILTROS POR GÉNERO
+.genre-filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.8rem;
+  margin-bottom: 1.5rem;
+  @include custom-scrollbar(4px);
+
+  .genre-pill {
+    white-space: nowrap;
+    background: rgba($cinema-surface, 0.9);
+    border: 1px solid $cinema-border;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.45rem 1.1rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-speed ease;
+
+    &:hover {
+      background: $cinema-surface-light;
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &.active {
+      background: $cinema-red;
+      color: #ffffff;
+      border-color: $cinema-red;
+      box-shadow: 0 2px 10px $cinema-red-glow;
+    }
+  }
+}
+
+// 5. MODAL DE DETALLES CINEMATOGRÁFICO
+.modal-cinematic {
+  .modal-dialog {
+    max-width: 900px;
+  }
+
+  .modal-content {
+    background: $cinema-deep;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: $border-radius-xl;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+    color: #ffffff;
+  }
+
+  .modal-backdrop-header {
+    position: relative;
+    height: 280px;
+    background-size: cover;
+    background-position: center;
+
+    .modal-backdrop-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba($cinema-deep, 0.2) 0%,
+        rgba($cinema-deep, 0.9) 80%,
+        $cinema-deep 100%
+      );
+    }
+
+    .btn-close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 10;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba($cinema-black, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      transition: all $transition-speed ease;
+
+      &:hover {
+        background: $cinema-red;
+        border-color: $cinema-red;
+      }
+    }
+  }
+
+  .modal-body-content {
+    position: relative;
+    padding: 0 2rem 2rem;
+    margin-top: -80px;
+  }
+
+  .modal-poster-col {
+    .modal-poster-img {
+      width: 100%;
+      border-radius: $border-radius;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  .cast-list {
+    display: flex;
+    gap: 0.8rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    @include custom-scrollbar(4px);
+
+    .cast-card {
+      min-width: 90px;
+      text-align: center;
+
+      .cast-img {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 0.4rem;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .cast-name {
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin: 0;
+        @include line-clamp(1);
+      }
+
+      .cast-character {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.5);
+        margin: 0;
+        @include line-clamp(1);
+      }
+    }
+  }
+
+  .trailer-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    border-radius: $border-radius;
+    border: 1px solid $cinema-border;
+    background: #000;
+    margin-top: 1rem;
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  }
+}
+
+// 6. SKELETON LOADERS
+.skeleton-card {
+  border-radius: $border-radius;
+  overflow: hidden;
+  background: $cinema-surface;
+  border: 1px solid $cinema-border;
+  height: 100%;
+
+  .skeleton-poster {
+    width: 100%;
+    padding-top: 150%;
+    @include skeleton-shimmer();
+  }
+
+  .skeleton-body {
+    padding: 0.9rem;
+
+    .skeleton-line {
+      height: 14px;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      @include skeleton-shimmer();
+
+      &.w-75 { width: 75%; }
+      &.w-50 { width: 50%; }
+    }
+  }
+}
+
+// 7. TOAST NOTIFICATIONS
+.cinema-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1090;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  max-width: 440px;
+}
+
+.cinema-toast {
+  background: $cinema-surface;
+  border: 1px solid $cinema-border-light;
+  border-left: 4px solid $cinema-red;
+  border-radius: $border-radius-sm;
+  padding: 0.85rem 1.15rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  animation: slideInRight 0.3s ease;
+
+  &.success {
+    border-left-color: #10b981;
+  }
+
+  &.warning {
+    border-left-color: $cinema-gold;
+  }
+
+  .toast-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .toast-message {
+    font-size: 0.88rem;
+    margin: 0;
+    line-height: 1.35;
+    flex-grow: 1;
+  }
+
+  .toast-action-btn {
+    margin-left: auto;
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #ffffff;
+    cursor: pointer;
+    transition: all $transition-speed ease;
+    white-space: nowrap;
+
+    &:hover {
+      background: $cinema-red;
+      border-color: $cinema-red;
+      color: #ffffff;
+      transform: scale(1.05);
+      box-shadow: 0 0 10px $cinema-red-glow;
+    }
+  }
+}
+
+// 8. ESTADOS VACÍOS (EMPTY STATES)
+.empty-state {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  background: rgba($cinema-surface, 0.4);
+  border: 1px dashed $cinema-border;
+  border-radius: $border-radius-lg;
+  margin: 2rem 0;
+
+  .empty-icon {
+    font-size: 3.5rem;
+    color: rgba(255, 255, 255, 0.25);
+    margin-bottom: 1rem;
+  }
+
+  .empty-title {
+    font-family: $font-family-display;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+  }
+
+  .empty-desc {
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 450px;
+    margin: 0 auto 1.5rem;
+    font-size: 0.92rem;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

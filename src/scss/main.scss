@@ -1,0 +1,21 @@
+// ==========================================
+// CINESCOPE - ARCHIVO MAESTRO SASS
+// ==========================================
+
+// 1. Fuentes Tipográficas Cinemáticas de Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+// 2. Variables de Marca y Sobrescritura de Bootstrap
+@import 'variables';
+
+// 3. Importación completa de Bootstrap 5 desde node_modules
+@import '../../node_modules/bootstrap/scss/bootstrap';
+
+// 4. Mixins de Estilo Personalizados
+@import 'mixins';
+
+// 5. Layout y Estructura Principal
+@import 'layout';
+
+// 6. Componentes de UI Cinematográficos
+@import 'components';
